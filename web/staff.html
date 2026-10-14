@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Redeem a prize · DJs Food Hall</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <section class="panel">
+    <h3>Staff: redeem a prize</h3>
+    <form id="f">
+      <label for="code">Prize code on the customer's phone</label>
+      <input id="code" autocomplete="off" maxlength="6" style="text-transform:uppercase" required>
+      <div class="row" style="margin-top:10px">
+        <div><label for="outlet">Outlet</label>
+          <select id="outlet"><option>Swirl</option><option>Bakery</option><option>Celebration</option><option>Level 2 Cafe</option><option>Retro Roast</option><option>Wok</option><option>Pan Divino City</option><option>Oyster Bar</option><option>The Deli</option></select></div>
+        <div><label for="pin">Staff PIN</label><input id="pin" type="password" inputmode="numeric" required></div>
+      </div>
+      <div class="btns"><button type="submit">Redeem</button></div>
+    </form>
+    <p class="note" id="out" role="status"></p>
+  </section>
+</main>
+<script>
+document.getElementById('f').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const out = document.getElementById('out');
+  const res = await fetch('/api/staff/redeem', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ code: code.value.trim(), pin: pin.value, outlet: outlet.value }) });
+  const r = await res.json();
+  out.textContent = r.ok ? `Redeemed: ${r.prize}. Hand it over.`
+    : r.error === 'already_redeemed' ? `Already used on ${new Date(r.redeemedAt).toLocaleString('en-AU')}.`
+    : r.error === 'bad_pin' ? 'Wrong staff PIN.' : 'Code not found.';
+  if (r.ok) code.value = '';
+});
+</script>
+</body>
+</html>

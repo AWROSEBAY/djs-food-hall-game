@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DJs Food Hall</title>
+<meta name="theme-color" content="#141414">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+  <section class="phone" aria-label="DJs Food Hall game">
+    <div class="hero">
+      <div class="photo"><img src="img/hero.jpg" alt="Diner enjoying a Wok beef salad at DJs Food Hall"><span class="cap serif">Skip the queue. Roll the dice.</span></div>
+      <div class="brand"><b>DJs Food Hall</b><span class="serif" id="seasonName">Season 1</span></div>
+      <div class="stats" id="stats">
+        <div class="stat"><small>Rolls waiting</small><strong id="sRolls">0</strong></div>
+        <div class="stat"><small>Square</small><strong id="sPos">0</strong><span style="color:var(--muted)">/50</span></div>
+        <div class="stat"><small>Snake shield</small><strong id="sShield">0</strong></div>
+      </div>
+    </div>
+
+    <!-- Sign in -->
+    <div class="signin" id="signin">
+      <h2 class="serif">Play the Food Hall game</h2>
+      <p>Every order of $10 or more earns a roll. Order before 11:30 or after 2pm for a bonus roll.</p>
+      <form id="phoneForm">
+        <label for="phone">Mobile number</label>
+        <input id="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="0412 345 678" required>
+        <div class="btns"><button type="submit">Send my code</button></div>
+      </form>
+      <form id="codeForm" class="hidden">
+        <label for="code">6-digit code</label>
+        <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+        <label class="check" for="terms"><input id="terms" type="checkbox"> I'm 18 or over, or have a parent's OK, and I accept the <a href="terms.html" target="_blank">game terms</a> and privacy policy.</label>
+        <label class="check" for="smsOptIn"><input id="smsOptIn" type="checkbox" checked> Text me when I earn a roll.</label>
+        <div class="btns"><button type="submit">Start playing</button></div>
+      </form>
+      <div class="err" id="authErr" role="alert"></div>
+    </div>
+
+    <!-- Game -->
+    <div id="game" class="hidden">
+      <div class="boardwrap">
+        <div class="board" id="board">
+          <svg viewBox="0 0 100 50" preserveAspectRatio="none" id="overlay" aria-hidden="true"></svg>
+          <div class="token" id="token"></div>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--ladder)"></i>Ladder</span>
+          <span><i style="background:var(--snake)"></i>Snake (max 3 back)</span>
+          <span><i style="background:var(--cp)"></i>Checkpoint</span>
+          <span><i style="background:var(--gold)"></i>Finish: grand prize draw</span>
+        </div>
+      </div>
+      <div class="play">
+        <div class="die" id="die" aria-live="polite">–</div>
+        <button id="rollBtn" type="button">Roll the dice</button>
+      </div>
+      <div class="play" style="padding-top:0"><div class="msg" id="msg">Order $10 or more at any DJs Food Hall outlet to earn a roll.</div></div>
+      <div class="grand">
+        <img src="img/grand-prize.jpg" alt="Champagne and a deli platter served at the food hall">
+        <div><small>Season grand prize</small><strong class="serif" id="grandPrize">A chef cooks dinner at your home</strong><span>Reach square 50 to go in the draw.</span></div>
+      </div>
+      <div class="wallet">
+        <h3>Prize wallet</h3>
+        <ul id="wallet"></ul>
+      </div>
+      <div class="foot"><span id="who"></span><button id="logout" class="ghost" type="button">Sign out</button></div>
+    </div>
+  </section>
+
+  <section class="panel dev hidden" id="devPanel">
+    <h3>Test mode: fake a Square order</h3>
+    <div class="row">
+      <div><label for="devOutlet">Outlet</label><select id="devOutlet"></select></div>
+      <div><label for="devAmount">Order total ($)</label><input id="devAmount" type="number" min="1" step="0.5" value="11.50"></div>
+    </div>
+    <div class="btns"><button id="devBuy" type="button">Pay</button></div>
+    <p class="note">Only shown when DEV_PURCHASES=1. In the live app, rolls only come from Square payments.</p>
+  </section>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><small>Messages · DJs Food Hall</small><span id="toastText"></span></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

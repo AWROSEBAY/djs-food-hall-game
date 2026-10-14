@@ -1,0 +1,9 @@
+{
+  "name": "DJs Food Hall",
+  "short_name": "Food Hall",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f1ea",
+  "theme_color": "#141414",
+  "icons": [{ "src": "img/hero.jpg", "sizes": "900x1100", "type": "image/jpeg" }]
+}
