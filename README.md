@@ -12,7 +12,7 @@ It's a web app (works in the phone browser, can be added to the home screen). No
 2. They pay at any DJES outlet in Square. Square sends a webhook to this app.
 3. The app finds the customer's mobile from the payment (the Square customer on the payment, or the
    pickup phone number on a kiosk/online order) and grants rolls:
-   - $10 minimum order (excludes tips), $8 at the Juice Bar
+   - $10 minimum order (excludes tips), $8 at Cool Press Juice Bar
    - 1 roll, or 2 for orders paid before 11:30 or from 2pm (Sydney time)
    - max 3 rolls per person per day
    - an off-peak order also gives a snake shield (hold 1 at a time)
@@ -60,7 +60,7 @@ Tests: `npm test`
 | `SMS_PROVIDER` | `twilio` or `console` |
 | `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN` | Twilio credentials |
 | `TWILIO_MESSAGING_SERVICE_SID` or `TWILIO_FROM` | sender (alphanumeric sender ID "DJsFoodHall" needs Twilio registration in AU) |
-| `JUICE_BAR_LOCATION_ID` | Square location ID for the Juice Bar once it has its own location (it sells under Celebration today). Juice Bar has an $8 minimum order |
+| `JUICE_BAR_LOCATION_ID` | Square location ID for Cool Press Juice Bar once it has its own location (it sells under Celebration today). Cool Press has an $8 minimum order |
 | `STAFF_PIN` | PIN staff enter to redeem prizes |
 | `ADMIN_TOKEN` | bearer token for `/api/admin/*` |
 
@@ -72,7 +72,7 @@ Tests: `npm test`
    pointing at `https://<your domain>/webhooks/square`. Copy the signature key.
 4. Test in the Square sandbox first (`SQUARE_ENV=sandbox`).
 
-The nine DJES location IDs are in `src/config.js`, plus the Juice Bar from `JUICE_BAR_LOCATION_ID`. Payments at any other location are ignored.
+The nine DJES location IDs are in `src/config.js`, plus Cool Press Juice Bar from `JUICE_BAR_LOCATION_ID`. Payments at any other location are ignored.
 
 ## Admin
 
