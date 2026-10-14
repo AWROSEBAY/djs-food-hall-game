@@ -2,7 +2,7 @@
 
 import { randomInt } from 'node:crypto';
 import { tx } from './db.js';
-import { SEASON, PRIZES, ROLL_RULES } from './config.js';
+import { SEASON, PRIZES, minOrderCents } from './config.js';
 import { localParts, rollsForPayment, move, seasonWeek, pickPrize, rollDie } from './engine.js';
 
 const now = () => new Date().toISOString();
@@ -40,12 +40,12 @@ export function recordPayment(db, { paymentId, phone, locationId, amountCents, p
     const { date } = localParts(paidAt);
     const earned = db.prepare(`SELECT COALESCE(SUM(rolls_granted), 0) AS n FROM payments
       WHERE phone = ? AND local_date = ?`).get(phone, date);
-    const r = rollsForPayment({ amountCents, paidAt, earnedToday: Number(earned.n) });
+    const r = rollsForPayment({ amountCents, paidAt, earnedToday: Number(earned.n), minOrderCents: minOrderCents(locationId) });
     db.prepare(`INSERT INTO payments (payment_id, phone, season_id, location_id, amount_cents,
       paid_at, local_date, off_peak, rolls_granted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`)
       .run(paymentId, phone, season.id, locationId, amountCents, paidAt, date, r.offPeak ? 1 : 0, r.rolls);
     let shield = false;
-    if (r.offPeak && amountCents >= ROLL_RULES.minOrderCents) {
+    if (r.offPeak) {
       const b = board(db, phone, season);
       if (b.shields < 1) {
         db.prepare('UPDATE boards SET shields = 1 WHERE phone = ? AND season_id = ?').run(phone, season.id);
@@ -64,7 +64,7 @@ export function recordRefund(db, { paymentId, refundedCents }) {
     if (!p) return null;
     const refunded = Math.max(p.refunded_cents, refundedCents);
     let revoked = p.rolls_revoked;
-    if (p.amount_cents - refunded < ROLL_RULES.minOrderCents) {
+    if (p.amount_cents - refunded < minOrderCents(p.location_id)) {
       revoked = p.rolls_granted - p.rolls_used;
     }
     db.prepare('UPDATE payments SET refunded_cents = ?, rolls_revoked = ? WHERE payment_id = ?')

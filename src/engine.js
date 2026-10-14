@@ -20,8 +20,8 @@ export function isOffPeak(when, rules = ROLL_RULES) {
 }
 
 // How many rolls a paid order earns, given rolls already earned that local day.
-export function rollsForPayment({ amountCents, paidAt, earnedToday }, rules = ROLL_RULES) {
-  if (amountCents < rules.minOrderCents) return { rolls: 0, offPeak: false, reason: 'under_minimum' };
+export function rollsForPayment({ amountCents, paidAt, earnedToday, minOrderCents }, rules = ROLL_RULES) {
+  if (amountCents < (minOrderCents ?? rules.minOrderCents)) return { rolls: 0, offPeak: false, reason: 'under_minimum' };
   const offPeak = isOffPeak(paidAt, rules);
   const wanted = offPeak ? 2 : 1;
   const room = Math.max(0, rules.dailyCap - earnedToday);

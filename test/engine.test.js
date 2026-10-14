@@ -23,6 +23,11 @@ test('peak order earns 1, off-peak earns 2', () => {
   assert.equal(rollsForPayment({ amountCents: 1000, paidAt: syd('14:00'), earnedToday: 0 }).rolls, 2);
 });
 
+test('an outlet can have a lower minimum order', () => {
+  assert.equal(rollsForPayment({ amountCents: 850, paidAt: syd('07:45'), earnedToday: 0 }).rolls, 0);
+  assert.equal(rollsForPayment({ amountCents: 850, paidAt: syd('07:45'), earnedToday: 0, minOrderCents: 800 }).rolls, 2);
+});
+
 test('daily cap of 3 holds', () => {
   assert.equal(rollsForPayment({ amountCents: 2000, paidAt: syd('08:00'), earnedToday: 2 }).rolls, 1);
   const r = rollsForPayment({ amountCents: 2000, paidAt: syd('08:00'), earnedToday: 3 });

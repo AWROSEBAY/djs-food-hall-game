@@ -48,6 +48,10 @@ export const PRIZES = [
   { id: 'pdv2', name: 'Pan Divino lunch for 2', costCents: 12000, qty: 5, weight: 1 },
 ];
 
+// Juice Bar has no Square location yet (checked 14 Oct 2026). Set JUICE_BAR_LOCATION_ID
+// to its Square location ID once it is set up, and it joins the game.
+const JUICE_BAR_ID = process.env.JUICE_BAR_LOCATION_ID;
+
 // Square location IDs for the DJES outlets that count towards the game.
 export const LOCATIONS = {
   LY2BWP34BMPZF: 'Bakery',
@@ -59,4 +63,16 @@ export const LOCATIONS = {
   LRNDZYN9YKC61: 'Retro Roast',
   LMJW0EDV18M49: 'Swirl',
   LDP5S6JBHMV9R: 'Wok',
+  ...(JUICE_BAR_ID ? { [JUICE_BAR_ID]: 'Juice Bar' } : {}),
 };
+
+// Outlets with a lower minimum order than ROLL_RULES.minOrderCents, by outlet name.
+// Juice Bar: a single juice is $9 to $10, so a $10 minimum would shut out the post-gym
+// customer it is there for. $8 is a placeholder until Ant confirms.
+export const OUTLET_MIN_ORDER_CENTS = {
+  'Juice Bar': 800,
+};
+
+export function minOrderCents(locationId) {
+  return OUTLET_MIN_ORDER_CENTS[LOCATIONS[locationId]] ?? ROLL_RULES.minOrderCents;
+}
